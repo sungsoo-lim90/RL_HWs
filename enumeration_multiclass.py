@@ -143,14 +143,22 @@ def enumeration_multiclass(discount_factor, T):
 
 	return save_state, V_t
 
-
-
+#Run the algorithm 1000 times, average the results
 save_state = np.zeros(1000)
 save_V = np.zeros(1000)
 for i in range(0,1000):
-	s, V = enumeration(1.0,500)
+	s, V = enumeration_multiclass(0.95,500)
 	save_state[i] = s[-1]
-	save_V[i] = V[0]
+	save_V[i] = V[-2]
 
-s_plot = [1,2,3,4,5]
-V_plot = [np.mean(save_V[save_state == 1]), np.mean(save_V[save_state == 2]), np.mean(save_V[save_state == 3]), np.mean(save_V[save_state == 4]), np.mean(save_V[save_state == 5])]
+#People at the station for t = 0
+s_plot = np.unique(save_state)
+V_plot = np.zeros(len(s_plot))
+for i in range(0,len(s_plot)-1):
+	V_plot[i] = np.mean(save_V[save_state == s_plot[i]])
+
+plt.plot(s_plot,V_plot)
+plt.title("Enumeration - multiclass")
+plt.xlabel('Number of people')
+plt.ylabel('Optimal Value Function')
+plt.savefig("enum_multi.png",dpi=300)

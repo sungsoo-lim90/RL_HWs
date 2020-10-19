@@ -9,7 +9,8 @@ Problem
 - Reward is assumed to be negative, as there are only costs involved
 - Assume that a bus can be dispatched below its capacity
 """
-import numpy as np 
+import numpy as np
+import matplotlib.pyplot as plt 
 
 NO_DISPATCH = 0 #not dispatching a bus is set as 0
 DISPATCH = 1 #dispatching a bus is set as 1
@@ -151,3 +152,10 @@ def policy_improvement(discount_factor, theta, policy_iteration_fn=policy_iterat
 
 			if policy_stable:
 				return custm, pol, V
+
+custm, pol, V = policy_improvement(0.95,0.0001)
+plt.scatter(custm,pol)
+plt.title("Policy iteration")
+plt.xlabel('Number of people')
+plt.ylabel('Optimal Policy')
+plt.savefig("policy_single.png",dpi=300)

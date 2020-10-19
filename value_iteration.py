@@ -10,14 +10,14 @@ Problem
 - Assume that a bus can be dispatched below its capacity
 """
 
-import numpy as np 
+import numpy as np
+import matplotlib.pyplot as plt 
 
 NO_DISPATCH = 0 #not dispatching a bus is set as 0
 DISPATCH = 1 #dispatching a bus is set as 1
 
 def value_iteration(theta, discount_factor):
 
-	nS = 1 #A state in which a bus is dispatched or not
 	nA = 2 #number of actions - dispatch a bus or not
 
 	K = 15 #capacity of a shuttle if dispatched
@@ -55,21 +55,21 @@ def value_iteration(theta, discount_factor):
 
 		#next state for dispatching a shuttle
 		if K > s: #can dispatch a shuttle not at maximum capacity in the beginning
-			next_cust_dispatch = cust
+			next_state_dispatch = cust
 		else:
-			next_cust_dispatch = (s-K+cust)
+			next_state_dispatch = (s-K+cust)
 
-		next_cust_no_dispatch = s+cust #next state for not dispatching a shuttle
+		next_state_no_dispatch = s+cust #next state for not dispatching a shuttle
 
-		reward_no_dispatch = -next_cust_no_dispatch*c_h #reward for not dispatching
-		reward_dispatch =  -next_cust_dispatch*c_h - c_f #reward for dispatching
+		reward_no_dispatch = -next_state_no_dispatch*c_h #reward for not dispatching
+		reward_dispatch =  -next_state_dispatch*c_h - c_f #reward for dispatching
 		
 		#prob, reward for not dispatching and dispatching
 		P[NO_DISPATCH] = [(1.0, reward_no_dispatch)]
 		P[DISPATCH] = [(1.0, reward_dispatch)]
 
 		#the capacity capped at 200 customers
-		if next_cust_no_dispatch >= 200: #always dispatch
+		if next_state_no_dispatch >= 200: #always dispatch
 			P[NO_DISPATCH] = P[DISPATCH]
 
 		A = plus_one(nA,P,V[i-1]) #calculate 
@@ -84,9 +84,9 @@ def value_iteration(theta, discount_factor):
 		delta = max(delta, np.abs(best_action_value - V[i]))
 
 		if best_action == 0: #re-define for iteration
-			s = next_cust_no_dispatch
+			s = next_state_no_dispatch
 		else:
-			s = next_cust_dispatch
+			s = next_state_dispatch
 
 		i = i + 1
 
@@ -99,4 +99,16 @@ def value_iteration(theta, discount_factor):
 
 	return custm, policy, V
 
+#Plotting
+s,pol,V = value_iteration(0.001,0.95)
+del V[0]
+s_plot = np.unique(s)
+V_plot = np.zeros(len(s_plot))
+for j in range(0,len(s_plot)-1):
+	V_plot = np.mean(V[s == s_plot[j]])
 
+plt.plot(s,V)
+plt.title("Value iteration")
+plt.xlabel('Number of people')
+plt.ylabel('Optimal Value Function')
+plt.savefig("value_single.png",dpi=300)

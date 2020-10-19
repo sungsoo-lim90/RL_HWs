@@ -15,7 +15,8 @@ Multiclass
 - Reward is calculated based on each c_h and c_f
 - Each class capped at 100 members each - not yet incorporated into the algorithm written here
 """
-import numpy as np 
+import numpy as np
+import matplotlib.pyplot as plt 
 
 NO_DISPATCH = 0 #not dispatching a bus is set as 0
 DISPATCH = 1 #dispatching a bus is set as 1
@@ -152,3 +153,17 @@ def value_iteration_multiclass(theta, discount_factor):
 	return custm, policy, V
 
 
+#Plotting
+s,pol,V = value_iteration_multiclass(0.001,0.95)
+del V[0]
+s_plot = np.unique(s)
+V_plot = np.zeros(len(s_plot))
+for j in range(0,len(s_plot)-1):
+	V_plot[j]= np.mean(V[s == s_plot[j]])
+
+plt.plot(s,V)
+plt.ticklabel_format(axis="y", style="sci", scilimits=(0,0))
+plt.title("Value iteration - multiclass")
+plt.xlabel('Number of people')
+plt.ylabel('Optimal Value Function')
+plt.savefig("value_multi.png")

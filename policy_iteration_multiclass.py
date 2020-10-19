@@ -16,7 +16,8 @@ Multiclass
 - Each class capped at 100 members each - not yet incorporated into the algorithm written here
 """
 
-import numpy as np 
+import numpy as np
+import matplotlib.pyplot as plt 
 
 NO_DISPATCH = 0 #State is no dispatched bus, and dispatches a bus
 DISPATCH = 1    #State is dispatched bus, and dispatches a bus
@@ -195,7 +196,7 @@ def policy_improvement_multiclass(discount_factor, theta, policy_iteration_fn=po
 			s3 = custm[i][2]
 			s4 = custm[i][3]
 			s5 = custm[i][4]
-
+			s = s1 + s2 + s3 + s4
 			reward_no_dispatch = -(s1*c_h[0] + s2*c_h[1] + s3*c_h[2] + s4*c_h[3] + s5*c_h[4]) #reward for not dispatching
 			reward_dispatch =  -(s1*c_h[0] + s2*c_h[1] + s3*c_h[2] + s4*c_h[3] + s5*c_h[4]) - c_f #reward for dispatching
 
@@ -212,3 +213,15 @@ def policy_improvement_multiclass(discount_factor, theta, policy_iteration_fn=po
 
 			if policy_stable:
 				return custm, pol, V
+
+custm, pol, V = policy_improvement_multiclass(0.95,0.01)
+
+flat_list = np.zeros(len(custm))
+for i in range(0,len(custm)-1):
+	flat_list[i] = np.sum(custm[i][:])
+
+plt.scatter(flat_list,pol)
+plt.title("Policy iteration - multiclass")
+plt.xlabel('Number of people')
+plt.ylabel('Optimal Policy')
+plt.savefig("policy_multi.png",dpi=300)

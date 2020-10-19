@@ -11,6 +11,7 @@ Problem
 """
 
 import numpy as np 
+import matplotlib.pyplot as plt
 
 NO_DISPATCH = 0 #not dispatching a bus is set as 0
 DISPATCH = 1 #dispatching a bus is set as 1
@@ -90,12 +91,20 @@ def enumeration(discount_factor, T):
 
 	return save_state, V_t
 
+#Run the algorithm 1000 times, average the results
 save_state = np.zeros(1000)
 save_V = np.zeros(1000)
 for i in range(0,1000):
-	s, V = enumeration(1.0,500)
+	s, V = enumeration(0.95,500)
 	save_state[i] = s[-1]
-	save_V[i] = V[0]
+	save_V[i] = V[-2]
 
+#Initially, there are between 1 and 5 people at the station for t = 0
 s_plot = [1,2,3,4,5]
 V_plot = [np.mean(save_V[save_state == 1]), np.mean(save_V[save_state == 2]), np.mean(save_V[save_state == 3]), np.mean(save_V[save_state == 4]), np.mean(save_V[save_state == 5])]
+
+plt.plot(s_plot,V_plot)
+plt.title("Enumeration algorithm")
+plt.xlabel('Number of people')
+plt.ylabel('Optimal Value Function')
+plt.savefig("enum_single.png",dpi=300)
