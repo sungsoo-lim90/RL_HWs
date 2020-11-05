@@ -1,3 +1,10 @@
+"""
+MSIA 490 HW2
+Policy gradient algorithm
+Sungsoo Lim - 11/5/20
+"""
+
+
 import gym
 import tensorflow as tf
 import numpy as np
@@ -86,14 +93,16 @@ class Agent:
         action = self.select_action(logits=logits)
         action = tf.keras.utils.to_categorical(action,num_classes=num_actions)
         return action, logits
-
+    
     def select_action(self, logits):
         return tf.random.categorical(logits,1)
-
+    
+    #zero-out grad vectors
     def zero_vector(self,grad_vector):
         for ix, grad in enumerate(grad_vector):
             grad_vector[ix] = grad * 0
-
+    
+    #train
     def train(self, env, num_episodes = 500):
         #obtain state space
         obs = env.reset()
