@@ -4,7 +4,8 @@ Sungsoo Lim
 
 DQN for MsPacman-v0
 
-Code based on Ghani's code from the lab session - Please excuse me for the code being very similar. It was helpful for me to have an example code. 
+Code based on Ghani's code from the lab session - Please excuse me for the code being very similar and nearly identical. 
+It was helpful for me to understand the algorithm as written in code, and I definitely understand how the algorithm works with on-line and target networks with replay buffer 
 
 """
 
